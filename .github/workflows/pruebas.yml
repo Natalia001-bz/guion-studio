@@ -11,6 +11,7 @@ permissions:
 jobs:
   pruebas:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -20,7 +21,7 @@ jobs:
         with:
           node-version: "22"
       - name: Instalar FFmpeg y fuentes
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+        run: sudo apt-get -o Acquire::Retries=3 update && sudo apt-get -o Acquire::Retries=3 install -y --no-install-recommends ffmpeg fonts-dejavu-core
       - name: Versión de FFmpeg
         run: ffmpeg -version | head -1
       - name: Instalar el paquete
