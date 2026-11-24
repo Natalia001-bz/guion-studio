@@ -15,11 +15,14 @@
   font-size: var(--t-ui);
   transition: opacity var(--dur);
 }
+/* Mientras corre el texto o en pantalla completa la barra se vuelve invisible, pero sigue
+   recibiendo el mouse: al acercarlo al borde superior reaparece y se puede usar.
+   (Con pointer-events: none el :hover nunca se activaba y la barra quedaba inalcanzable.) */
 body.corriendo .barra,
-body.completa .barra { opacity: 0; pointer-events: none; }
+body.completa .barra { opacity: 0; }
 body.corriendo .barra:hover,
 body.completa .barra:hover,
-.barra:focus-within { opacity: 0.95; pointer-events: auto; }
+.barra:focus-within { opacity: 0.95; }
 
 .barra__grupo { display: flex; gap: var(--e-1); align-items: center; }
 .barra__estado { margin-left: auto; color: var(--c-tenue); }
