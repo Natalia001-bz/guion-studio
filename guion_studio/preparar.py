@@ -88,14 +88,22 @@ def procesar(proy: Proyecto, plan: Plan) -> Path:
     imagen = IMAGEN.get(p["imagen"], p["imagen"])
     audio = AUDIO.get(p["audio"], p["audio"])
     vel, fps = p["velocidad"], p["fps"]
-    expr = "+".join(f"between(t,{a},{b})" for a, b in plan.tramos)
-    v = (f"[0:v]fps={fps},select='{expr}',setpts=N/FRAME_RATE/TB,{imagen},"
-         f"setpts=PTS/{vel},fps={fps},format=yuv420p[v]")
+    # Recorte con trim/atrim + concat: estable entre versiones de FFmpeg
+    # (select/aselect con between() se comportó distinto en FFmpeg 6 y en versiones nuevas).
+    n = len(plan.tramos)
+    f = [f"[0:v]fps={fps},setpts=PTS-STARTPTS,split={n}" + "".join(f"[vs{i}]" for i in range(n)),
+         "[0:a]asetpts=PTS-STARTPTS,asplit=" + str(n) + "".join(f"[as{i}]" for i in range(n))]
+    pares = ""
+    for i, (a0, b0) in enumerate(plan.tramos):
+        f.append(f"[vs{i}]trim=start={a0}:end={b0},setpts=PTS-STARTPTS[vt{i}]")
+        f.append(f"[as{i}]atrim=start={a0}:end={b0},asetpts=PTS-STARTPTS[at{i}]")
+        pares += f"[vt{i}][at{i}]"
+    f.append(f"{pares}concat=n={n}:v=1:a=1[vc][ac]")
     tempo = f"rubberband=tempo={vel}:window=standard," if abs(vel - 1) > 1e-3 else ""
-    a = (f"[0:a]aselect='{expr}',asetpts=N/SR/TB,{audio},{tempo}"
-         f"loudnorm=I={p['volumen_lufs']}:TP=-1.5:LRA=9,aresample=48000[a]")
+    f.append(f"[vc]{imagen},setpts=PTS/{vel},fps={fps},format=yuv420p[v]")
+    f.append(f"[ac]{audio},{tempo}loudnorm=I={p['volumen_lufs']}:TP=-1.5:LRA=9,aresample=48000[a]")
     out = salida / f"bloque{plan.numero}.mp4"
-    ejecutar(["ffmpeg", "-y", "-v", "error", "-i", str(plan.origen), "-filter_complex", f"{v};{a}",
+    ejecutar(["ffmpeg", "-y", "-v", "error", "-i", str(plan.origen), "-filter_complex", ";".join(f),
               "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "medium", "-crf", str(p["crf"]),
               "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", str(out)])
     return out

@@ -97,7 +97,7 @@ Si una diapositiva o un ítem queda corrido, se corrige en `ajustes.toml` y se v
 pip install -e ".[dev]"
 pytest                       # 15 pruebas; las de extremo a extremo generan clips sintéticos con FFmpeg
 pytest -m "not lento"        # solo las rápidas
-node --test tests/           # lector del guion del teleprompter
+node --test "tests/*.test.js"           # lector del guion del teleprompter
 ```
 
 La integración continua ejecuta las dos suites en cada cambio y publica el teleprompter en GitHub Pages.
