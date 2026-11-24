@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teleprompter · guion-studio</title>
+<meta name="description" content="Teleprompter web que lee tu guion en Markdown, graba cada bloque con la cámara y descarga los clips listos para el montaje.">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<header class="barra" aria-label="Controles del teleprompter">
+  <div class="barra__grupo">
+    <button class="boton" id="b-guion" title="Abrir o editar el guion (G)">Guion</button>
+    <label class="visualmente-oculto" for="s-bloque">Bloque</label>
+    <select class="selector" id="s-bloque" title="Bloque (1–9)"></select>
+  </div>
+  <span class="separador" aria-hidden="true"></span>
+  <div class="barra__grupo">
+    <button class="boton boton--primario" id="b-iniciar">▶ Iniciar <kbd>Espacio</kbd></button>
+    <button class="boton" id="b-reiniciar" title="Volver al inicio del bloque (R)">⟲</button>
+  </div>
+  <span class="separador" aria-hidden="true"></span>
+  <div class="barra__grupo" aria-label="Lectura">
+    <button class="boton" id="b-lento" title="Más lento (↓)">−</button>
+    <span id="ppm" class="tenue">135 ppm</span>
+    <button class="boton" id="b-rapido" title="Más rápido (↑)">+</button>
+    <button class="boton" id="b-menos" title="Letra más pequeña (−)">A−</button>
+    <button class="boton" id="b-mas" title="Letra más grande (+)">A+</button>
+    <button class="boton" id="b-subir" title="Subir la franja de lectura (RePág)">▲</button>
+    <button class="boton" id="b-bajar" title="Bajar la franja de lectura (AvPág)">▼</button>
+    <button class="boton" id="b-espejo" title="Texto en espejo, para vidrio de teleprompter (M)">Espejo</button>
+    <button class="boton" id="b-completa" title="Pantalla completa (F)">Pantalla completa</button>
+  </div>
+  <span class="separador" aria-hidden="true"></span>
+  <div class="barra__grupo" aria-label="Grabación">
+    <button class="boton" id="b-camara" title="Ver la cámara y el nivel del micrófono (C)">Cámara</button>
+    <button class="boton boton--grabar" id="b-grabar" title="Grabar cada bloque al iniciarlo (X)">● Grabar al iniciar</button>
+  </div>
+  <button class="boton" id="b-ayuda" title="Ayuda (?)">?</button>
+  <span class="barra__estado" id="estado" aria-live="polite"></span>
+</header>
+
+<main class="visor" id="visor">
+  <div class="guia" id="guia" aria-hidden="true"></div>
+  <div class="texto" id="texto"></div>
+</main>
+
+<aside class="camara" id="camara" hidden aria-label="Vista de la cámara">
+  <div style="position:relative">
+    <video id="video" autoplay muted playsinline></video>
+    <span class="camara__rec">● REC</span>
+  </div>
+  <div class="medidor" title="Nivel del micrófono"><div class="medidor__nivel" id="nivel"></div></div>
+  <div class="camara__aviso" id="aviso-camara"></div>
+</aside>
+
+<div class="cuenta" id="cuenta" aria-live="assertive"></div>
+
+<dialog class="dialogo" id="d-guion" aria-labelledby="t-guion">
+  <h2 id="t-guion">Tu guion</h2>
+  <p class="tenue">Pega o escribe el guion, abre un archivo <code>.md</code> o arrástralo a la ventana.
+    Cada <code>## </code> abre un bloque; una línea es una respiración; <code>···</code> es una pausa larga;
+    <code>**énfasis**</code>; <code>[[pronunciación]]</code> no se lee; <code>&gt; nota</code> es para ti.</p>
+  <label class="visualmente-oculto" for="editor">Texto del guion</label>
+  <textarea id="editor" spellcheck="true"></textarea>
+  <div class="dialogo__acciones">
+    <label class="boton" for="archivo">Abrir archivo…</label>
+    <input type="file" id="archivo" accept=".md,.txt,text/markdown,text/plain" class="visualmente-oculto">
+    <button class="boton" id="b-ejemplo">Cargar ejemplo</button>
+    <button class="boton" id="b-descargar-guion">Descargar .md</button>
+    <button class="boton boton--primario" id="b-usar">Usar este guion</button>
+  </div>
+</dialog>
+
+<dialog class="dialogo" id="d-ayuda" aria-labelledby="t-ayuda">
+  <h2 id="t-ayuda">Cómo leer sin que se note</h2>
+  <ol>
+    <li><b>Pon esta ventana justo debajo de la cámara</b>, angosta: los ojos casi no se mueven y parece que miras al público.</li>
+    <li><b>Siéntate a 60-80 cm</b>. Cuanto más lejos, menos se nota el movimiento de los ojos.</li>
+    <li><b>Sube la franja</b> (▲ o <kbd>RePág</kbd>) hasta que quede bajo la cámara, y <b>lee siempre en la franja</b>.</li>
+    <li><b>Una línea = una respiración.</b> El espacio entre grupos es una pausa corta; <span class="tenue">· · ·</span> es una pausa larga para mirar a la cámara.</li>
+    <li>Ensaya cada bloque <b>dos veces en voz alta</b> y ajusta la velocidad antes de grabar.</li>
+    <li><b>Luz de frente, nunca detrás.</b> Una ventana o una cortina clara a la espalda oscurece la cara.</li>
+    <li>Con <b>Grabar al iniciar</b> activo, cada bloque se graba y se descarga como <code>bloqueN.webm</code>. Guárdalos en la carpeta <code>clips/</code> del proyecto.</li>
+  </ol>
+  <p><kbd>Espacio</kbd> iniciar/pausar · <kbd>S</kbd> detener la grabación · <kbd>↑</kbd><kbd>↓</kbd> velocidad · <kbd>←</kbd><kbd>→</kbd> retroceder/avanzar ·
+    <kbd>+</kbd><kbd>−</kbd> tamaño · <kbd>R</kbd> reiniciar · <kbd>M</kbd> espejo · <kbd>F</kbd> pantalla completa ·
+    <kbd>RePág</kbd><kbd>AvPág</kbd> franja · <kbd>1</kbd>–<kbd>9</kbd> bloque · <kbd>C</kbd> cámara · <kbd>X</kbd> grabar al iniciar · <kbd>G</kbd> guion</p>
+  <p class="tenue">Todo ocurre en tu navegador: el guion y los videos no se envían a ningún servidor.</p>
+  <div class="dialogo__acciones"><button class="boton boton--primario" id="b-entendido">Entendido</button></div>
+</dialog>
+
+<script src="js/guion.js"></script>
+<script src="js/ejemplo.js"></script>
+<script src="js/grabadora.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

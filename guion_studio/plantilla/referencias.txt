@@ -1,0 +1,2 @@
+FFmpeg Developers. (s. f.). *FFmpeg documentation*. https://ffmpeg.org/documentation.html
+International Telecommunication Union. (2023). *Recommendation ITU-R BS.1770-5: Algorithms to measure audio programme loudness and true-peak audio level*. https://www.itu.int/rec/R-REC-BS.1770

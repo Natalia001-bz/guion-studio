@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "guion-studio"
+version = "0.1.0"
+description = "Del guion al video: teleprompter con grabación, diapositivas animadas sincronizadas con la voz y montaje con FFmpeg."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Natalia Berrio Zuleta" }]
+dependencies = ["Pillow>=10.1"]
+keywords = ["video", "teleprompter", "ffmpeg", "diapositivas", "educación"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+guion-studio = "guion_studio.cli:main"
+
+[tool.setuptools]
+packages = ["guion_studio"]
+
+[tool.setuptools.package-data]
+guion_studio = ["plantilla/*"]
+
+[tool.pytest.ini_options]
+markers = ["lento: prueba de extremo a extremo con FFmpeg (tarda ~1 min)"]

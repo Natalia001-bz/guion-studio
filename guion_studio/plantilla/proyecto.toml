@@ -1,0 +1,24 @@
+# Configuración del proyecto. Solo hace falta escribir lo que cambia;
+# el resto toma los valores por defecto (ver docs/configuracion.md).
+
+[proyecto]
+titulo = "Cómo preparar una exposición en video"
+guion = "guion.md"
+diapositivas = "diapositivas.toml"
+clips = "clips"
+salida = "salida/video.mp4"
+
+[preparar]
+velocidad = 1.05     # 1,05 no se nota; desde 1,10 suena apurado
+imagen = "suave"     # suave | ninguna | filtros FFmpeg propios
+audio = "limpio"     # limpio | ninguno | filtros FFmpeg propios
+
+[montaje]
+rotulo_nombre = "Tu nombre"
+rotulo_detalle = "Tu programa · Tu institución"
+intro_camara = 6.0
+
+[tema]
+cabecera = "GUION-STUDIO · EJEMPLO"
+# Para usar otras fuentes, indica la ruta de cada .ttf:
+# fuente_titulo = "/ruta/a/Georgia.ttf"

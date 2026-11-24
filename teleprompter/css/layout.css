@@ -1,0 +1,52 @@
+/* layout.css · zonas de la pantalla */
+
+/* Barra de controles: se oculta mientras corre el texto y reaparece al pasar el mouse por arriba */
+.barra {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-2);
+  align-items: center;
+  padding: var(--e-2) var(--e-3);
+  background: var(--c-panel);
+  border-bottom: 1px solid var(--c-borde);
+  font-size: var(--t-ui);
+  transition: opacity var(--dur);
+}
+body.corriendo .barra,
+body.completa .barra { opacity: 0; pointer-events: none; }
+body.corriendo .barra:hover,
+body.completa .barra:hover,
+.barra:focus-within { opacity: 0.95; pointer-events: auto; }
+
+.barra__grupo { display: flex; gap: var(--e-1); align-items: center; }
+.barra__estado { margin-left: auto; color: var(--c-tenue); }
+
+/* Zona de lectura */
+.visor { position: fixed; inset: 0; overflow: hidden; }
+
+.texto {
+  position: absolute;
+  left: 50%;
+  width: min(var(--ancho, 840px), 92vw);
+  transform: translateX(-50%);
+  will-change: top;
+  line-height: var(--interlinea-lectura);
+}
+body.espejo .texto { transform: translateX(-50%) scaleX(-1); }
+
+/* Vista de cámara: esquina superior derecha, bajo la barra */
+.camara {
+  position: fixed;
+  top: 64px;
+  right: var(--e-4);
+  z-index: 4;
+  width: 240px;
+}
+
+@media (max-width: 720px) {
+  .camara { width: 140px; }
+  .barra__estado { width: 100%; margin-left: 0; }
+}

@@ -1,0 +1,72 @@
+# Diapositivas de ejemplo. Cada [[diapositiva]] pertenece a un bloque del guion.
+# `entra`: frase del guion con que aparece (la primera del bloque entra al inicio).
+# `frase` en un ítem: el ítem aparece con un fundido cuando se dice esa frase.
+# Las frases se buscan sin importar mayúsculas ni signos. Comprueba con:
+#   guion-studio guion
+
+[[diapositiva]]
+id = "pregunta"
+bloque = 1
+tipo = "pregunta"
+etiqueta = "Bloque 1 · Apertura"
+titulo = "La pregunta"
+texto = "¿Qué separa un video improvisado de uno que se entiende a la primera?"
+items = [{ texto = "Guion · Grabación · Montaje", frase = "Mi respuesta tiene tres partes" }]
+
+[[diapositiva]]
+id = "metodo"
+bloque = 2
+tipo = "numerada"
+etiqueta = "Bloque 2 · Método"
+titulo = "Tres pasos"
+items = [
+  { titulo = "Guion para la voz", texto = "Frases cortas, una por respiración.", frase = "Primero, el guion" },
+  { titulo = "Grabación por bloques", texto = "Un clip por bloque; se repite solo lo que falla.", frase = "Segundo, la grabación" },
+  { titulo = "Montaje que acompaña", texto = "Las diapositivas entran cuando la voz las nombra.", frase = "Tercero, el montaje" },
+]
+
+[[diapositiva]]
+id = "cifras"
+bloque = 2
+entra = "Los números ayudan a planear"
+tipo = "datos"
+etiqueta = "Bloque 2 · Método"
+titulo = "Cifras para planear"
+fuente = "Valores de referencia de este proyecto."
+items = [
+  { cifra = "135", rotulo = "palabras por minuto, ritmo natural de exposición", frase = "135 palabras por minuto" },
+  { cifra = "≈ 8 min", rotulo = "para un guion de 1100 palabras", frase = "dura unos ocho minutos" },
+  { cifra = "5-10 s", rotulo = "de silencios recortados por cada minuto de clip", frase = "suele perder entre" },
+]
+
+[[diapositiva]]
+id = "comparacion"
+bloque = 3
+tipo = "comparacion"
+etiqueta = "Bloque 3 · Cierre"
+titulo = "Dos caminos"
+items = [
+  { titulo = "Improvisado", texto = "Depende de la memoria y del ánimo del día.", frase = "El video improvisado" },
+  { titulo = "Con guion", texto = "Se puede revisar, medir y repetir.", frase = "El video con guion" },
+]
+
+[[diapositiva]]
+id = "consejos"
+bloque = 3
+entra = "Para terminar"
+tipo = "tabla"
+etiqueta = "Bloque 3 · Cierre"
+titulo = "Tres consejos"
+cabecera = ["Aspecto", "Consejo"]
+items = [
+  { celdas = ["Luz", "De frente, nunca a la espalda (evita el contraluz)."], frase = "graba con luz de frente" },
+  { celdas = ["Sonido", "Micrófono cerca de la boca."], frase = "usa un micrófono" },
+  { celdas = ["Edición", "Un segundo de silencio al empezar y al terminar."], frase = "deja un segundo de silencio" },
+]
+
+# Sin `bloque`: va al final, a pantalla completa, y se pagina sola.
+[[diapositiva]]
+id = "referencias"
+tipo = "referencias"
+titulo = "Referencias"
+archivo = "referencias.txt"
