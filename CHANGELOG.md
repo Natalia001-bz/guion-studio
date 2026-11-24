@@ -1,5 +1,9 @@
 # Cambios
 
+## Próximo
+
+- Pendiente: la grabación automática se detiene 1,5 s después de que el final del texto cruza la franja; si se lee por encima de la franja, se cortan las últimas palabras. Se hará que se detenga por silencio del micrófono, con un aviso cancelable y una espera configurable.
+
 ## 0.1.0 · 2026-11-24
 
 Primera versión pública, construida a partir de la producción de un video universitario real.
